@@ -159,10 +159,10 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- tab spacing stuff - kai
-vim.o.tabstop = 4
-vim.o.expandtab = true
-vim.o.shiftwidth = 4
-vim.o.softtabstop = 4
+-- vim.o.tabstop = 4
+-- vim.o.expandtab = true
+-- vim.o.shiftwidth = 4
+-- vim.o.softtabstop = 4
 
 -- other kai stuff
 vim.o.mouse = ''
@@ -1085,7 +1085,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
