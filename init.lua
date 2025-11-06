@@ -653,6 +653,29 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'lervag/vimtex',
+    lazy = false, -- we don't want to lazy load VimTeX
+    -- tag = "v2.15", -- uncomment to pin to a specific release
+    init = function()
+      -- VimTeX configuration goes here, e.g.
+      vim.g.vimtex_view_method = 'general'
+      vim.g.vimtex_imags_enabled = 0
+      vim.g.vimtex_quickfix_open_on_warning = 0
+    end,
+  },
+  {
+    'saghen/blink.compat',
+    version = '*',
+    opts = { impersonate_nvim_cmp = false },
+  },
+  {
+    'micangl/cmp-vimtex',
+    ft = 'tex',
+    config = function()
+      require('cmp_vimtex').setup {}
+    end,
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -841,7 +864,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
@@ -879,15 +901,6 @@ require('lazy').setup({
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
-  },
-  {
-    'lervag/vimtex',
-    lazy = false, -- we don't want to lazy load VimTeX
-    -- tag = "v2.15", -- uncomment to pin to a specific release
-    init = function()
-      -- VimTeX configuration goes here, e.g.
-      vim.g.vimtex_view_method = 'zathura'
-    end,
   },
   {
     -- Main LSP Configuration
@@ -1196,6 +1209,7 @@ require('lazy').setup({
     event = 'VimEnter',
     version = '1.*',
     dependencies = {
+      { 'micangl/cmp-vimtex' },
       -- Snippet Engine
       {
         'L3MON4D3/LuaSnip',
@@ -1249,7 +1263,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'super-tab',
+        preset = 'enter',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -1268,9 +1282,14 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets', 'lazydev', 'vimtex' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          vimtex = {
+            name = 'vimtex',
+            module = 'blink.compat.source',
+            score_offset = 3,
+          },
         },
       },
 
@@ -1288,6 +1307,7 @@ require('lazy').setup({
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
     },
+    opts_extend = { 'sources.default' },
   },
 
   { -- You can easily change to a different colorscheme.
@@ -1363,6 +1383,7 @@ require('lazy').setup({
     opts = {
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
+      ignore_install = { 'latex' },
       auto_install = true,
       highlight = {
         enable = true,
